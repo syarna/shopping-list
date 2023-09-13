@@ -1,0 +1,1 @@
+print("Hello", "DDP1", "Syarna", sep="ini_separator")
