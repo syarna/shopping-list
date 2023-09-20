@@ -1,19 +1,14 @@
+import datetime
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
-from django.contrib.auth import logout
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from main.forms import ProductForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core import serializers
 from django.urls import reverse
 from main.models import Product
-from django.http import HttpResponse
-from django.core import serializers
-from django.shortcuts import redirect
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-import datetime
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+from main.forms import ProductForm
 
 def logout_user(request):
     logout(request)
@@ -67,10 +62,10 @@ def show_xml(request):
 # Create your views here.
 @login_required(login_url='/login')
 def show_main(request):
-    products = Product.objects.all()
+    products = Product.objects.filter(user=request.user)
 
     context = {
-        'name': 'Syarna Savitri', # Nama kamu
+        'name': request.user.username, # Nama kamu
         'class': 'PBP B', # Kelas PBP kamu
         'products': products,
         'last_login': request.COOKIES['last_login'],
@@ -82,7 +77,9 @@ def create_product(request):
     form = ProductForm(request.POST or None)
 
     if form.is_valid() and request.method == "POST":
-        form.save()
+        product = form.save(commit=False)
+        product.user = request.user
+        product.save()
         return HttpResponseRedirect(reverse('main:show_main'))
 
     context = {'form': form}
