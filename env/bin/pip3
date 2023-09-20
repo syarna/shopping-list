@@ -1,4 +1,4 @@
-#!/Users/syarnasavitri/Documents/PBP/shopping-list/shopping-list/env/bin/python3.11
+#!/Users/syarnasavitri/Documents/PBP/shopping_list/env/bin/python3.11
 # -*- coding: utf-8 -*-
 import re
 import sys
