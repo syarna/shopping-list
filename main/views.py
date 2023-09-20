@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from main.forms import ProductForm
@@ -9,6 +10,10 @@ from django.core import serializers
 from django.shortcuts import redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+
+def logout_user(request):
+    logout(request)
+    return redirect('main:login')
 
 def login_user(request):
     if request.method == 'POST':
