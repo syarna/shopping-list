@@ -5,6 +5,21 @@ from django.urls import reverse
 from main.models import Product
 from django.http import HttpResponse
 from django.core import serializers
+from django.shortcuts import redirect
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
 
 def show_xml_by_id(request, id):
     data = Product.objects.filter(pk=id)
